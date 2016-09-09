@@ -1,34 +1,33 @@
 # download data from Fendl 3.1b
 import os
-import argparse
-
-def get_save_path():
-	parser = argparse.ArgumentParser(description=
-		'Downloads Fendl3.1b data for neutrons (MATXS) and creates a TRANSX input.')
-	parser.add_argument('-s', nargs='?', type=str, default='$HOME/fendl3.1b/',
-		help='path to save downloaded data', required=False)
-	parser.add_argument('-d', nargs='?', type=str, 
-		default='https://www-nds.iaea.org/fendl/data/neutron/fendl31b-neutron-matxs.zip', 
-		help='URL to the data, default is Fendl3.1 data', required=False)
 
 
+def download_data(data_path):
+	print('Downloading Fendl 3.1b data to ./data/')
+	os.system("wget https://www-nds.iaea.org/fendl/data/neutron/fendl31b-neutron-matxs.zip")
+	print('Extracting Data')
+	os.system("unzip fendl31b-neutron-matxs.zip -d {}".format(data_path))
+	os.system("rm fendl31b-neutron-matxs.zip")
+	
+	
 def main():
-	# get the path to download and save
-	# path to fendl https://www-nds.iaea.org/fendl/
-	parser = argparse.ArgumentParser(description=
-		'Downloads Fendl3.1b data for neutrons (MATXS) and creates a TRANSX input.')
-	parser.add_argument('-s', nargs='?', type=str, default='$HOME/fendl3.1b/',
-		help='path to save downloaded data', required=False)
-	parser.add_argument('-d', nargs='?', type=str, 
-		default='https://www-nds.iaea.org/fendl/data/neutron/fendl31b-neutron-matxs.zip', 
-		help='URL to the data, default is Fendl3.1 data', required=False)
-	# download and extract data
+	### DOWNLOAD DATA ###
+	data_path = './data/'
 	
-	# read files and create input
-	
-
-
-
+	# check if data folder already exist
+	if os.path.isdir(data_path):	
+		# if folder is empty download data
+		if not os.listdir(data_path):		
+			download_data(data_path)
+		else:
+			# assume data exists
+			print("Data already exists")
+	else:
+		# Folder does not exist so create folder
+		os.system("mkdir data")
+		# get data
+		download_data(data_path)
+		
 
 if __name__ == "__main__":
 	main()
