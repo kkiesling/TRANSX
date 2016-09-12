@@ -68,8 +68,22 @@ def card3(data_path):
 																 NED, NEDS)
 	return c3
 	
-def card4():
-	pass
+def card4(data_path):
+	# For every .m file in the data_path, reads line 1 to get name
+	c4 = ""
+	
+	for filename in sorted(os.listdir(data_path)):
+		# read line 1
+		path = '{}{}'.format(data_path, filename)
+		f = open(path, 'r')
+		line = f.readline()
+		name = line.split('*')[1][9:].strip()
+		c4 += name + " "
+		f.close()
+	
+	c4 = c4.rstrip() +"\n"
+	print(c4)
+	return c4
 	
 def card5():
 	pass
@@ -122,7 +136,7 @@ def main():
 			download_data(data_path)
 		else:
 			# assume data exists
-			print("Data already exists")
+			print("Data already exists in ./data/. Will not download.")
 	else:
 		# Folder does not exist so create folder
 		os.system("mkdir data")
