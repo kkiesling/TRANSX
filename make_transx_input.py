@@ -109,6 +109,38 @@ def card8():
 	return c, HED
 
 def card9(datapath, HED, n_TF, g_TF):
+	c = ""
+
+	for i, edit in enumerate(HED):
+		
+		# assume all mixes are used in heat with standard multiplier
+		if edit == 'heat':
+			# check if writing for neutron, gammas, or both
+			if n_TF:
+				c += '{} heat/\n'.format(i)
+			if g_TF:
+				c += '{} gheat/\n'.format(i)
+		
+		# assume all mixes are used in kerma with standard multiplier
+		elif edit == 'kerma':
+			# check if writing for neutron, gammas, or both
+			if n_TF:
+				c += '{} kerma/\n'.format(i)
+			if g_TF:
+				c += '{} gheat/\n'.format(i)
+		
+		# assume all mixes are used in dame with standard multiplier
+		elif edit == 'kerma':
+			c += '{} dame/\n'.format(i)
+		
+		# need to check files contain dame? but they all do
+	
+	for filename in sorted(os.listdir(datapath)):
+		# read line 1
+		path = '{}/{}'.format(datapath, filename)
+		#f = open(path, 'r')
+		 
+	
 	return ""
 
 def card10():
@@ -187,7 +219,7 @@ def main():
 	c9 = card9(datapath, HED, n_TF, g_TF)
 	
 	total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8
-	print(total)
+	#print(total)
 
 if __name__ == "__main__":
 	main()
