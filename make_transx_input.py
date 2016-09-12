@@ -3,33 +3,35 @@ import os
 import argparse as ap
 import glob
 
-def download_data(data_path):
+def download_data(datapath):
 	print('Downloading Fendl 3.1b data to ./data/')
 	os.system("wget https://www-nds.iaea.org/fendl/data/neutron/fendl31b-neutron-matxs.zip")
 	print('Extracting Data')
-	os.system("unzip fendl31b-neutron-matxs.zip -d {}".format(data_path))
+	os.system("unzip fendl31b-neutron-matxs.zip -d {}".format(datapath))
 	os.system("rm fendl31b-neutron-matxs.zip")
 	
 def card1():
 	c = "Fendl 3.1b Neutron Data\n"
 	return(c)
 
-def card2(**kwargs):
+def card2():
 	
-	if 'IPRINT' in kwargs:
-		IPRINT = kwargs['IPRINT']
-	else:
-		IPRINT = 0
-		print("Set Card 2 IPRINT to default value 0 (long)")
-	
-	if 'IOUT' in kwargs:
-		IOUT = kwargs['IOUT']
-	else:
-		IOUT = 0
-		print("Set Card 2 IOUT to default value 0 (fido)")
+	#if 'IPRINT' in kwargs:
+	#	IPRINT = kwargs['IPRINT']
+	#else:
+	#	IPRINT = 0
+	#	print("Set Card 2 IPRINT to default value 0 (long)")
+	#
+	#if 'IOUT' in kwargs:
+	#	IOUT = kwargs['IOUT']
+	#else:
+	#	IOUT = 0
+	#	print("Set Card 2 IOUT to default value 0 (fido)")
+		
+	c = "idk what to do with this card yet\n"
+	return c
 
-	
-def card3(data_path):
+def card3(datapath):
 	# NGROUP = ??? (-217 in others)
 	NGROUP = -217
 	
@@ -46,8 +48,8 @@ def card3(data_path):
 	NTHG =0
 	
 	# NMIX = number of mixes (ie number of *.m files)
-	NMIX = len(glob.glob1(data_path, "*.m"))
-	
+	NMIX = len(glob.glob1(datapath, "*.m"))
+
 	# NREG - number of regions, assume 1
 	NREG = 1
 	
@@ -61,44 +63,53 @@ def card3(data_path):
 	# NEDS = ????
 	NEDS = NED + 0
 	
-	c3 = "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n".format(NGROUP, NL,
-																 NTABL, NUP,
-																 NTHG, NMIX,
-																 NREG, NMIXS,
-																 NED, NEDS)
-	return c3
+	c = "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n".format(NGROUP, NL,
+															NTABL, NUP,
+															NTHG, NMIX,
+															NREG, NMIXS,
+															NED, NEDS)
+	return c, NMIX
 	
-def card4(data_path):
-	# For every .m file in the data_path, reads line 1 to get name
-	c4 = ""
+def card4(datapath):
+	# For every .m file in the datapath, reads line 1 to get name
+	c = ""
+	names = []
 	
-	for filename in sorted(os.listdir(data_path)):
+	for filename in sorted(os.listdir(datapath)):
 		# read line 1
-		path = '{}{}'.format(data_path, filename)
+		path = '{}/{}'.format(datapath, filename)
 		f = open(path, 'r')
 		line = f.readline()
 		name = line.split('*')[1][9:].strip()
-		c4 += name + " "
+		c += name + " "
+		names.append(name)
 		f.close()
 	
-	c4 = c4.rstrip() +"\n"
-	print(c4)
-	return c4
+	c = c.rstrip() +"\n"
+	return c, names
 	
 def card5():
-	pass
+	return "r1/\n"
 
 def card6():
-	pass
+	# no card 6 in the samples?
+	return ""
 	
-def card7():
-	pass
+def card7(names):
+	c = ""
+	for i, mix in enumerate(names):
+		c += "{} 1 {}/\n".format(i, mix)
+	
+	return c
 	
 def card8():
-	pass
+	HED = ['heat', 'kerma', 'dame', 'dpa', 't', 'he', 'h']
+	c = '{0} {1} {2} {3} {4} {5} {6}\n'.format(HED[0], HED[1], HED[2], HED[3], 
+											   HED[4], HED[5], HED[6])
+	return c, HED
 
-def card9():
-	pass
+def card9(datapath, HED, n_TF, g_TF):
+	return ""
 
 def card10():
 	pass
@@ -127,13 +138,13 @@ def main():
 	# parser.add_argument('-icoll', nargs='?', default=0, type=int)
 	
 	### DOWNLOAD & EXTRACT DATA ###
-	data_path = './data/'
+	datapath = './data/'
 	
 	# check if data folder already exist
-	if os.path.isdir(data_path):	
+	if os.path.isdir(datapath):	
 		# if folder is empty download data
-		if not os.listdir(data_path):		
-			download_data(data_path)
+		if not os.listdir(datapath):		
+			download_data(datapath)
 		else:
 			# assume data exists
 			print("Data already exists in ./data/. Will not download.")
@@ -141,8 +152,12 @@ def main():
 		# Folder does not exist so create folder
 		os.system("mkdir data")
 		# get data
-		download_data(data_path)
+		download_data(datapath)
 		
+	# Use neutron or gamma or both
+	# set both to true for now
+	n_TF = True
+	g_TF = True
 	
 	### CREATE INPUT ###  
 	# create a string for each card individually
@@ -152,14 +167,27 @@ def main():
 	
 	# card 2 - Options
 	## make optional card arguments, otherwise defaults?
+	c2 = card2()
 	
 	# card 3 - Parameters
 	# This has to be done after the rest maybe?
-	c3 = card3(data_path)
+	c3, NMIX = card3(datapath)
 	
 	# card 4 - Mix Names
-	c4 = card4(data_path)
+	c4, names = card4(datapath)
 	
+	c5 = card5()
+	
+	c6 = card6()
+	
+	c7 = card7(names)
+	
+	c8, HED = card8()
+	
+	c9 = card9(datapath, HED, n_TF, g_TF)
+	
+	total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8
+	print(total)
 
 if __name__ == "__main__":
 	main()
