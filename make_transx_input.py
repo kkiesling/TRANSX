@@ -103,6 +103,7 @@ def card7(names):
     return c
 
 def card8():
+    ## Add something to make these edits optional?
     HED = ['heat', 'kerma', 'dame', 'dpa', 't', 'he', 'h']
     c = '{0} {1} {2} {3} {4} {5} {6}\n'.format(HED[0], HED[1], HED[2], HED[3],
                                                HED[4], HED[5], HED[6])
@@ -135,13 +136,12 @@ def card9(datapath, HED, n_TF, g_TF):
 
         # need to check files contain dame? but they all do
 
-    for filename in sorted(os.listdir(datapath)):
-        # read line 1
-        path = '{}/{}'.format(datapath, filename)
-        #f = open(path, 'r')
+    #for filename in sorted(os.listdir(datapath)):
+    #    # read line 1
+    #    path = '{}/{}'.format(datapath, filename)
+    #    #f = open(path, 'r')
 
-
-    return ""
+    return c
 
 def card10():
     pass
@@ -218,8 +218,8 @@ def main():
 
     c9 = card9(datapath, HED, n_TF, g_TF)
 
-    total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8
-    #print(total)
+    total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9
+    print(total)
 
 if __name__ == "__main__":
     main()
