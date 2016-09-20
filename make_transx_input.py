@@ -64,10 +64,10 @@ def card3(datapath):
     NEDS = NED + 0
 
     c = "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n".format(NGROUP, NL,
-                                                            NTABL, NUP,
-                                                            NTHG, NMIX,
-                                                            NREG, NMIXS,
-                                                            NED, NEDS)
+                                                           NTABL, NUP,
+                                                           NTHG, NMIX,
+                                                           NREG, NMIXS,
+                                                           NED, NEDS)
     return c, NMIX
 
 def card4(datapath):
@@ -98,7 +98,7 @@ def card6():
 def card7(names):
     c = ""
     for i, mix in enumerate(names):
-        c += "{} 1 {}/\n".format(i, mix)
+        c += "{} 1 {}/\n".format(i+1, mix)
 
     return c
 
@@ -118,28 +118,117 @@ def card9(datapath, HED, n_TF, g_TF):
         if edit == 'heat':
             # check if writing for neutron, gammas, or both
             if n_TF:
-                c += '{} heat/\n'.format(i)
+                c += '{} heat/\n'.format(i+1)
             if g_TF:
-                c += '{} gheat/\n'.format(i)
+                c += '{} gheat/\n'.format(i+1)
 
         # assume all mixes are used in kerma with standard multiplier
         elif edit == 'kerma':
             # check if writing for neutron, gammas, or both
             if n_TF:
-                c += '{} kerma/\n'.format(i)
+                c += '{} kerma/\n'.format(i+1)
             if g_TF:
-                c += '{} gheat/\n'.format(i)
+                c += '{} gheat/\n'.format(i+1)
+
+        elif edit == 'dame':
+            c += '{} dame/\n'.format(i+1)
 
         # assume all mixes are used in dame with standard multiplier
-        elif edit == 'kerma':
-            c += '{} dame/\n'.format(i)
+        elif edit == 'dpa':
+            # right now, this is just what has always been used
+            c += '4 dame .0129 be9/\n'
+            c += '4 dame .0129 c12/\n'
+            c += '4 dame .016 na23/\n'
 
-        # need to check files contain dame? but they all do
+            #c += '4 dame .016 mgnat/\n'
+            c += '4 dame .016 mg23/\n'
+            c += '4 dame .016 mg24/\n'
+            c += '4 dame .016 mg25/\n'
+            c += '4 dame .016 mg26/\n'
 
-    #for filename in sorted(os.listdir(datapath)):
-    #    # read line 1
-    #    path = '{}/{}'.format(datapath, filename)
-    #    #f = open(path, 'r')
+            c += '4 dame .0148 al27/\n'
+            c += '4 dame .016 si28/\n'
+            c += '4 dame .016 si29/\n'
+            c += '4 dame .016 si30/\n'
+
+            #c += '4 dame .01 knat/\n'
+            c += '4 dame .01 k39/\n'
+            c += '4 dame .01 k40/\n'
+            c += '4 dame .01 k41/\n'
+
+            #c += '4 dame .01 canat/\n'
+            c += '4 dame .01 ca40/\n'
+            c += '4 dame .01 ca42/\n'
+            c += '4 dame .01 ca43/\n'
+            c += '4 dame .01 ca44/\n'
+            c += '4 dame .01 ca46/\n'
+            c += '4 dame .01 ca48/\n'
+
+            c += '4 dame .01 ti46/\n'
+            c += '4 dame .01 ti47/\n'
+            c += '4 dame .01 ti48/\n'
+            c += '4 dame .01 ti49/\n'
+            c += '4 dame .01 ti50/\n'
+
+            #c += '4 dame .01 vnat/\n'
+            c += '4 dame .01 v50/\n'
+            c += '4 dame .01 v51/\n'
+
+            c += '4 dame .01 cr50/\n'
+            c += '4 dame .01 cr52/\n'
+            c += '4 dame .01 cr53/\n'
+            c += '4 dame .01 cr54/\n'
+            c += '4 dame .01 mn55/\n'
+            c += '4 dame .01 fe54/\n'
+            c += '4 dame .01 fe56/\n'
+            c += '4 dame .01 fe57/\n'
+            c += '4 dame .01 fe58/\n'
+            c += '4 dame .01 co59/\n'
+            c += '4 dame .01 ni58/\n'
+            c += '4 dame .01 ni60/\n'
+            c += '4 dame .01 ni61/\n'
+            c += '4 dame .01 ni62/\n'
+            c += '4 dame .01 ni64/\n'
+            c += '4 dame .01 cu63/\n'
+            c += '4 dame .01 cu65/\n'
+
+            #c += '4 dame .01 zrnat/\n'
+            c += '4 dame .01 zr90/\n'
+            c += '4 dame .01 zr91/\n'
+            c += '4 dame .01 zr92/\n'
+            c += '4 dame .01 zr94/\n'
+            c += '4 dame .01 zr96/\n'
+
+            c += '4 dame .01 nb93/\n'
+            c += '4 dame .00667 mo92/\n'
+            c += '4 dame .00667 mo94/\n'
+            c += '4 dame .00667 mo95/\n'
+            c += '4 dame .00667 mo96/\n'
+            c += '4 dame .00667 mo97/\n'
+            c += '4 dame .00667 mo98/\n'
+            c += '4 dame .00667 mo100/\n'
+
+            c += '4 dame .00444 ta181/\n'
+            c += '4 dame .00444 w182/\n'
+            c += '4 dame .00444 w183/\n'
+            c += '4 dame .00444 w184/\n'
+            c += '4 dame .00444 w186/\n'
+            c += '4 dame .01333 au197/\n'
+            c += '4 dame .016 pb206/\n'
+            c += '4 dame .016 pb207/\n'
+            c += '4 dame .016 pb208/\n'
+
+        elif edit == 't':
+            c += '{} * .h3*/\n'.format(i+1)
+
+        elif edit == 'he':
+            c += '{} * .he3*/\n'.format(i+1)
+            c += '{} * .he4*/\n'.format(i+1)
+
+        elif edit == 'h':
+            c += '{} * .h1*/\n'.format(i+1)
+            c += '{} * .h2*/\n'.format(i+1)
+            c += '{} * .h3*/\n'.format(i+1)
 
     return c
 
@@ -218,7 +307,7 @@ def main():
 
     c9 = card9(datapath, HED, n_TF, g_TF)
 
-    total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9
+    total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9 + 'stop'
     print(total)
 
 if __name__ == "__main__":
