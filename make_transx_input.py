@@ -57,13 +57,13 @@ def card3(datapath, n_TF, g_TF):
     else:
         g_group = 0
 
-    NGROUP = n_group + g_group
+    # negative indicates that data will be read from the directory
+    NGROUP = -(n_group + g_group)
 
     # NL = ??
-    NL = 6
+    NL = 12
 
-    # NTABL = ??
-    NTABL = 227
+
 
     # NUP = ??
     NUP = 0
@@ -84,14 +84,18 @@ def card3(datapath, n_TF, g_TF):
     # t, he, and h
     NED = 7
 
-    # NEDS
-    NEDS = NED
+    # NEDS = equals the number of entries for the edits
+    NEDS = NED + 77
+
+    # NTABL = ??
+    NTABL = abs(NGROUP) + NED + NUP
 
     c = "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n".format(NGROUP, NL,
                                                            NTABL, NUP,
                                                            NTHG, NMIX,
                                                            NREG, NMIXS,
                                                            NED, NEDS)
+    c += "*matxsdata/*/\n"
     return c, NMIX
 
 def card4(datapath):
@@ -287,6 +291,8 @@ def main():
     n_TF = True
     g_TF = True
 
+    ## BBC
+
     ### CREATE INPUT ###
     # create a string for each card individually
 
@@ -315,7 +321,6 @@ def main():
     c9 = card9(datapath, HED, n_TF, g_TF)
 
     total = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9 + 'stop'
-    print(total)
     input_file = open("input.txt", "w")
     input_file.write(total)
     input_file.close()
